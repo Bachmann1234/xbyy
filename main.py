@@ -49,7 +49,7 @@ def landing_page():
         verbs.pop()
     )
     title_two = "Stop trying to {} the {}".format(
-        verbs.pop().lower(), nouns.pop().lower()
+        make_base_verb(verbs.pop()).lower(), nouns.pop().lower()
     )
     title_three = "Industry Tested, Community Approved"
 
