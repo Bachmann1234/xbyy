@@ -3,18 +3,18 @@ from main import (_get_words,
                   NOUN,
                   ADJECTIVE,
                   VERB,
-                  make_ing,
-                  make_base_verb)
+                  BASEVERB)
 
 
-def test_make_ing():
-    assert make_ing(u'dog') == 'doging'
-
-
-def test_make_base_verb():
-    assert make_base_verb(u'dogging') == 'dogg'
-    assert make_base_verb(u'dogged') == 'dogg'
-    assert make_base_verb(u'doggeded') == 'dogged'
+def test_get_words_ing():
+    assert all(
+        w.endswith('ing')
+        for w in _get_words(
+            VERB,
+            num_to_grab=100,
+            ends_with='ing'
+        )
+    )
 
 
 def test_get_words():
@@ -59,6 +59,12 @@ def test_get_word_opens_correct_file(monkeypatch):
         make_file_assertion(VERB, original_open)
     )
     _get_words(VERB)
+    monkeypatch.setattr(
+        builtins,
+        'open',
+        make_file_assertion(BASEVERB, original_open)
+    )
+    _get_words(BASEVERB)
 
 
 def test_landing_page(app):

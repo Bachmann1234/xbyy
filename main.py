@@ -8,9 +8,10 @@ app = Flask(__name__)
 NOUN = 'noun'
 VERB = 'verb'
 ADJECTIVE = 'adjective'
+BASEVERB = 'baseverbs'
 
 
-def _get_words(type, num_to_grab=1):
+def _get_words(type, num_to_grab=1, ends_with=''):
     with open(
             os.path.join(
                 os.path.dirname(__file__),
@@ -18,30 +19,17 @@ def _get_words(type, num_to_grab=1):
             ),
             'r'
     ) as word_bag_file:
-        word_list = list(word_bag_file.readlines())
+        word_list = [word for word in word_bag_file.readlines()
+                     if word.strip().endswith(ends_with)]
         return [random.choice(word_list).strip().title()
                 for _ in itertools.repeat(None, num_to_grab)]
-
-
-def make_base_verb(verb):
-    if verb[-3:] == 'ing':
-        verb = verb[:-3]
-    elif verb[-2:] == 'ed':
-        verb = verb[:-2]
-    return verb
-
-
-def make_ing(verb):
-    return "{}{}".format(
-        make_base_verb(verb),
-        'ing'
-    )
 
 
 @app.route('/')
 def landing_page():
     nouns = _get_words(NOUN, 7)
-    verbs = _get_words(VERB, 5)
+    verbs = _get_words(VERB, 2)
+    base_verbs = _get_words(BASEVERB, 3)
     adjectives = _get_words(ADJECTIVE, 1)
     company, product = nouns[0:2]
     nouns = nouns[2:]
@@ -49,15 +37,15 @@ def landing_page():
         verbs.pop()
     )
     title_two = "Stop trying to {} the {}".format(
-        make_base_verb(verbs.pop()).lower(), nouns.pop().lower()
+        base_verbs.pop().lower(), nouns.pop().lower()
     )
     title_three = "Industry Tested, Community Approved"
 
     desc_one = "{} was always {} until now!".format(
-        make_base_verb(verbs.pop()), adjectives.pop().lower()
+        base_verbs.pop(), adjectives.pop().lower()
     )
     desc_two = "Never again will {} be so easy".format(
-        make_ing(verbs.pop()).lower()
+        _get_words(VERB, 1, ends_with='ing').pop().lower()
     )
     desc_three = (
         "Backed by {} Certification and "
@@ -69,7 +57,7 @@ def landing_page():
     )
 
     phrase_one = "The {} that {}s".format(
-        nouns.pop().lower(), make_base_verb(verbs.pop().lower())
+        nouns.pop().lower(), base_verbs.pop().lower()
     )
     return render_template(
         'index.html',
