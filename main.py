@@ -8,7 +8,7 @@ app = Flask(__name__)
 NOUN = 'noun'
 VERB = 'verb'
 ADJECTIVE = 'adjective'
-BASEVERB = 'baseverbs'
+BASEVERB = 'baseVerbs'
 
 
 def _get_words(type, num_to_grab=1, ends_with=''):
