@@ -28,13 +28,13 @@ def _get_words(type, num_to_grab=1, ends_with=''):
 @app.route('/')
 def landing_page():
     nouns = _get_words(NOUN, 7)
-    verbs = _get_words(VERB, 2)
+    ingwords = _get_words(VERB, 2, ends_with='ing')
     base_verbs = _get_words(BASEVERB, 3)
     adjectives = _get_words(ADJECTIVE, 1)
     company, product = nouns[0:2]
     nouns = nouns[2:]
     title_one = "Revolutionize {}".format(
-        verbs.pop()
+        ingwords.pop()
     )
     title_two = "Stop trying to {} the {}".format(
         base_verbs.pop().lower(), nouns.pop().lower()
@@ -45,7 +45,7 @@ def landing_page():
         base_verbs.pop(), adjectives.pop().lower()
     )
     desc_two = "Never again will {} be so easy".format(
-        _get_words(VERB, 1, ends_with='ing').pop().lower()
+        ingwords.pop().lower()
     )
     desc_three = (
         "Backed by {} Certification and "
